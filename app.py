@@ -4,6 +4,7 @@ from models import db, User
 from flask_login import LoginManager
 from werkzeug.security import generate_password_hash
 import os
+import sys
 
 # Create app
 app = Flask(__name__)
@@ -21,11 +22,16 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 # Register blueprints
-from auth import auth as auth_blueprint
-app.register_blueprint(auth_blueprint)
-
-from routes import main as main_blueprint
-app.register_blueprint(main_blueprint)
+try:
+    from auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
+    
+    from routes import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+except Exception as e:
+    print(f"Error loading blueprints: {e}", file=sys.stderr)
+    import traceback
+    traceback.print_exc()
 
 # Initialize database on first request
 @app.before_request
@@ -46,7 +52,7 @@ def init_db():
                     print(f"Admin user '{Config.ADMIN_USERNAME}' created")
                 app._db_initialized = True
             except Exception as e:
-                print(f"Database initialization error: {e}")
+                print(f"Database initialization error: {e}", file=sys.stderr)
 
 if __name__ == '__main__':
     app.run(debug=Config.FLASK_DEBUG, host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
