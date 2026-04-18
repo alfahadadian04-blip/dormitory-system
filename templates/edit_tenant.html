@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Tenant - Dormitory System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>Edit Tenant</h2>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label>Name *</label>
+            <input type="text" name="name" value="{{ tenant.name }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Phone</label>
+            <input type="text" name="phone" value="{{ tenant.phone or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" value="{{ tenant.email or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label>Room Number</label>
+            <input type="text" name="room_number" value="{{ tenant.room_number or '' }}">
+        </div>
+        
+        <div class="form-group">
+            <label>Move-in Date</label>
+            <input type="date" name="move_in_date" value="{{ tenant.move_in_date }}">
+        </div>
+        
+        <div class="form-group">
+            <label>Monthly Rent ($)</label>
+            <input type="number" name="rent_amount" step="0.01" value="{{ tenant.rent_amount }}">
+        </div>
+        
+        <div class="form-group">
+            <label>Status</label>
+            <select name="status">
+                <option value="active" {% if tenant.status == 'active' %}selected{% endif %}>Active</option>
+                <option value="inactive" {% if tenant.status == 'inactive' %}selected{% endif %}>Inactive</option>
+            </select>
+        </div>
+        
+        <button type="submit" class="btn">Update Tenant</button>
+        <a href="{{ url_for('main.tenant_detail', id=tenant.id) }}" style="margin-left: 10px;">Cancel</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Tenants - Dormitory System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>All Tenants</h2>
+        <a href="{{ url_for('main.add_tenant') }}" class="btn">Add New Tenant</a>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Room</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Rent</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tenant in tenants %}
+            <tr>
+                <td>{{ tenant.name }}</td>
+                <td>{{ tenant.room_number or '-' }}</td>
+                <td>{{ tenant.phone or '-' }}</td>
+                <td>{{ tenant.email or '-' }}</td>
+                <td>{{ tenant.status }}</td>
+                <td>${{ "%.2f"|format(tenant.rent_amount) }}</td>
+                <td>
+                    <a href="{{ url_for('main.tenant_detail', id=tenant.id) }}" class="btn" style="padding: 5px 10px; font-size: 14px;">View</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

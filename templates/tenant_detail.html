@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ tenant.name }} - Dormitory System{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>{{ tenant.name }}</h2>
+        <div>
+            <a href="{{ url_for('main.edit_tenant', id=tenant.id) }}" class="btn">Edit</a>
+            <form method="POST" action="{{ url_for('main.delete_tenant', id=tenant.id) }}" style="display: inline;" onsubmit="return confirm('Are you sure?');">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        <div>
+            <p><strong>Room Number:</strong> {{ tenant.room_number or 'N/A' }}</p>
+            <p><strong>Phone:</strong> {{ tenant.phone or 'N/A' }}</p>
+            <p><strong>Email:</strong> {{ tenant.email or 'N/A' }}</p>
+        </div>
+        <div>
+            <p><strong>Status:</strong> {{ tenant.status }}</p>
+            <p><strong>Move-in Date:</strong> {{ tenant.move_in_date or 'N/A' }}</p>
+            <p><strong>Monthly Rent:</strong> ${{ "%.2f"|format(tenant.rent_amount) }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Payment History</h3>
+    {% if tenant.payments %}
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Month</th>
+                <th>Amount</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in tenant.payments %}
+            <tr>
+                <td>{{ payment.payment_date }}</td>
+                <td>{{ payment.payment_month or '-' }}</td>
+                <td>${{ "%.2f"|format(payment.amount) }}</td>
+                <td>{{ payment.notes or '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No payments recorded yet.</p>
+    {% endif %}
+    <a href="{{ url_for('main.add_payment') }}" class="btn btn-success" style="margin-top: 15px;">Record Payment</a>
+</div>
+
+<a href="{{ url_for('main.tenants') }}" class="btn">← Back to Tenants</a>
+{% endblock %}

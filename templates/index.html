@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Dormitory System{% endblock %}
+
+{% block content %}
+<div class="stats">
+    <div class="stat-card">
+        <div class="stat-number">{{ total_tenants }}</div>
+        <div>Total Tenants</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">{{ active_tenants }}</div>
+        <div>Active Tenants</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-number">${{ "%.2f"|format(total_rent) }}</div>
+        <div>Monthly Rent</div>
+    </div>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>Recent Tenants</h2>
+        <a href="{{ url_for('main.add_tenant') }}" class="btn">Add Tenant</a>
+    </div>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Room</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Rent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tenant in tenants[:5] %}
+            <tr>
+                <td><a href="{{ url_for('main.tenant_detail', id=tenant.id) }}">{{ tenant.name }}</a></td>
+                <td>{{ tenant.room_number or '-' }}</td>
+                <td>{{ tenant.phone or '-' }}</td>
+                <td>{{ tenant.status }}</td>
+                <td>${{ "%.2f"|format(tenant.rent_amount) }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
